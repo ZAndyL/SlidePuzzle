@@ -19,8 +19,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import static com.zandyl.slidepuzzle.R.id.button;
-
 
 public class MainActivity extends ActionBarActivity {
 
@@ -67,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 
         Button butt;
         RelativeLayout idk;
-        ImageView img;
+        ImageView greenishSquare;
         PointF[] positions = new PointF[9];
 
         public PlaceholderFragment() {
@@ -77,15 +75,14 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            butt = (Button)rootView.findViewById(button);
             idk = (RelativeLayout)rootView.findViewById(R.id.root);
-            img = (ImageView)rootView.findViewById(R.id.img);
+            greenishSquare = (ImageView)rootView.findViewById(R.id.greenishSquare);
             //if (butt!=null)
             idk.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    img.setX(event.getX());
-                    img.setY(event.getY());
+                    greenishSquare.setX(event.getX());
+                    greenishSquare.setY(event.getY());
                     Log.d("you touch", "me");
                     return true;
                 }
@@ -94,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
             for(int i = 0; i < 9; i++){
                 positions[i] = new PointF();
             }
-            butt.setTranslationX(500);
+            
             return rootView;
         }
     }
