@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
-        squareWidth = (float)width / (numSquares + 1);
+        squareWidth = (float)width / (numSquares);
     }
 
 
@@ -96,30 +96,25 @@ public class MainActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             idk = (RelativeLayout) rootView.findViewById(R.id.root);
             greenishSquare = (ImageView) rootView.findViewById(R.id.greenishSquare);
-            //if (butt!=null)
-//            idk.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    greenishSquare.setX(event.getX());
-//                    greenishSquare.setY(event.getY());
-//                    Log.d("you touch", "me at: " + event.getX() + " " + event.getY());
-//                    return true;
-//                }
-//            });
-
 
             squares[0] = greenishSquare;
             squares[1] = (ImageView) rootView.findViewById(R.id.purpleishSquare);
+
+            squares[1].setImageResource(R.drawable.selfie);
+
 
             for(int i = 0; i < numSquares; i++){
 
                 positions[i] = new PointF(i * squareWidth, (height - squareWidth)/2);
 
+//                ImageView square = new ImageView( getActivity() );
+//                squares[i] = square;
+
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) squares[i].getLayoutParams();
                 params.height = (int)squareWidth;
                 params.width = (int)squareWidth;
-                squares[i].setX(positions[i].x);
                 squares[i].setLayoutParams(params);
+                squares[i].setX(positions[i].x);
                 squares[i].setY(positions[i].y);
 
                 //change later
