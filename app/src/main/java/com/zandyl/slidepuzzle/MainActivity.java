@@ -2,6 +2,7 @@ package com.zandyl.slidepuzzle;
 
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -129,28 +130,55 @@ public class MainActivity extends ActionBarActivity {
             return rootView;
         }
 
-//        private int getPositionNumForXY(PointF position){
-//
-//        }
+        private int getPositionNumForXY(PointF position){
+            for(int i = 0; i < numSquares; i++){
+                Rect tempRec = new Rect((int)positions[i].x, (int)positions[i].y, (int)(positions[i].x + squareWidth), (int)(positions[i].y + squareWidth));
+                Log.d("rect is", ""+tempRec + " position is: " + position.x + " " + position.y);
+
+                if(tempRec.contains((int)position.x, (int)position.y)){
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private void swapSquares(int s1, int s2){
+            ImageView tmp = squares[s1];
+            int tmpId = squares[s1].getId();
+
+            squares[s1] = squares[s2];
+            squares[s1].setId(squares[s2].getId());
+
+            squares[s2] = tmp;
+            squares[s2].setId(tmpId);
+
+
+        }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-
-            Log.d("you touch", "me at: " + event.getX() + " " + event.getY());
-
             switch(event.getAction()){
                 case MotionEvent.ACTION_DOWN:
+
+                    Log.d("you touch down", " at: " + event.getX() + " " + event.getY());
                     v.bringToFront();
                     oldSquarePosition = positions[v.getId()];
                 case MotionEvent.ACTION_UP:
-//                    if(event.get){
-//
-//                    }
-//                    else{
+
+                    Log.d("you touch up", " at: " + event.getX() + " " + event.getY());
+                    int posNum = getPositionNumForXY(new PointF(event.getX() + v.getX(), event.getY() + v.getY()));
+                    if( posNum != -1){
+                        squares[posNum].setX(oldSquarePosition.x);
+                        squares[posNum].setY(oldSquarePosition.y);
+                        swapSquares(v.getId(), posNum);
+                        oldSquarePosition = positions[posNum];
+                    }
+                    else{
                         v.setX(oldSquarePosition.x);
                         v.setY(oldSquarePosition.y);
-//                    }
+                    }
                 default:
                     squares[v.getId()].setX(event.getX() + v.getX() - squareWidth / 2);
                     squares[v.getId()].setY(event.getY() + v.getY() - squareWidth / 2);
