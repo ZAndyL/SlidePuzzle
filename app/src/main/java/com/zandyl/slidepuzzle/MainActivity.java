@@ -1,5 +1,7 @@
 package com.zandyl.slidepuzzle;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -30,6 +32,8 @@ public class MainActivity extends ActionBarActivity {
     static final int numSquares = 2;
 
     static ImageView[] squares = new ImageView[numSquares];
+
+    static Bitmap[] bitmapsArray = new Bitmap[numSquares];
 
     static float squareWidth;
 
@@ -94,13 +98,17 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            createImageArrays();
+
             idk = (RelativeLayout) rootView.findViewById(R.id.root);
             greenishSquare = (ImageView) rootView.findViewById(R.id.greenishSquare);
 
             squares[0] = greenishSquare;
             squares[1] = (ImageView) rootView.findViewById(R.id.purpleishSquare);
 
-            squares[1].setImageResource(R.drawable.selfie);
+            squares[0].setImageBitmap(bitmapsArray[0]);
+            squares[1].setImageBitmap(bitmapsArray[1]);
 
 
             for(int i = 0; i < numSquares; i++){
@@ -128,7 +136,7 @@ public class MainActivity extends ActionBarActivity {
         private int getPositionNumForXY(PointF position){
             for(int i = 0; i < numSquares; i++){
                 Rect tempRec = new Rect((int)positions[i].x, (int)positions[i].y, (int)(positions[i].x + squareWidth), (int)(positions[i].y + squareWidth));
-                Log.d("rect is", ""+tempRec + " position is: " + position.x + " " + position.y);
+                Log.d("rect is", "" + tempRec + " position is: " + position.x + " " + position.y);
 
                 if(tempRec.contains((int)position.x, (int)position.y)){
                     return i;
@@ -148,6 +156,16 @@ public class MainActivity extends ActionBarActivity {
             squares[s1].setId(s1);
             squares[s2].setId(s2);
 
+
+        }
+
+        void createImageArrays()
+        {
+            Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.selfie);
+            Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, width*2, width, true);
+
+            bitmapsArray[0] = Bitmap.createBitmap(bMapScaled, 0, 0, width, width);
+            bitmapsArray[1] = Bitmap.createBitmap(bMapScaled, width, 0, width, width);
 
         }
 
