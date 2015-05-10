@@ -145,13 +145,13 @@ public class MainActivity extends ActionBarActivity {
 
         private void swapSquares(int s1, int s2){
             ImageView tmp = squares[s1];
-            int tmpId = squares[s1].getId();
 
             squares[s1] = squares[s2];
-            squares[s1].setId(squares[s2].getId());
 
             squares[s2] = tmp;
-            squares[s2].setId(tmpId);
+
+            squares[s1].setId(s1);
+            squares[s2].setId(s2);
 
 
         }
@@ -173,7 +173,8 @@ public class MainActivity extends ActionBarActivity {
                         squares[posNum].setX(oldSquarePosition.x);
                         squares[posNum].setY(oldSquarePosition.y);
                         swapSquares(v.getId(), posNum);
-                        oldSquarePosition = positions[posNum];
+                        v.setX(positions[posNum].x);
+                        v.setY(positions[posNum].y);
                     }
                     else{
                         v.setX(oldSquarePosition.x);
