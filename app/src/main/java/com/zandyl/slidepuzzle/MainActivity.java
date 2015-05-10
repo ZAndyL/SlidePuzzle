@@ -82,7 +82,9 @@ public class MainActivity extends ActionBarActivity {
         Button butt;
         RelativeLayout idk;
         ImageView greenishSquare;
-        PointF[] positions = new PointF[9];
+        PointF[] positions = new PointF[numSquares];
+
+        PointF oldSquarePosition;
 
         public PlaceholderFragment() {
         }
@@ -127,6 +129,10 @@ public class MainActivity extends ActionBarActivity {
             return rootView;
         }
 
+//        private int getPositionNumForXY(PointF position){
+//
+//        }
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
@@ -136,6 +142,15 @@ public class MainActivity extends ActionBarActivity {
             switch(event.getAction()){
                 case MotionEvent.ACTION_DOWN:
                     v.bringToFront();
+                    oldSquarePosition = positions[v.getId()];
+                case MotionEvent.ACTION_UP:
+//                    if(event.get){
+//
+//                    }
+//                    else{
+                        v.setX(oldSquarePosition.x);
+                        v.setY(oldSquarePosition.y);
+//                    }
                 default:
                     squares[v.getId()].setX(event.getX() + v.getX() - squareWidth / 2);
                     squares[v.getId()].setY(event.getY() + v.getY() - squareWidth / 2);
