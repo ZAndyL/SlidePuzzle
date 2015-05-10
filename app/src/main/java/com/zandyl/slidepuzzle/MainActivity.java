@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -21,6 +22,16 @@ import android.widget.RelativeLayout;
 
 
 public class MainActivity extends ActionBarActivity {
+    DisplayMetrics displaymetrics;
+    static int height;
+    static int width;
+
+    static final int numSquares = 2;
+
+    static ImageView[] squares = new ImageView[numSquares];
+
+    static float squareWidth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +44,11 @@ public class MainActivity extends ActionBarActivity {
         }
 
 
+        displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        height = displaymetrics.heightPixels;
+        width = displaymetrics.widthPixels;
+        squareWidth = (float)width / (numSquares + 1);
     }
 
 
@@ -61,7 +77,7 @@ public class MainActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends Fragment implements View.OnTouchListener {
 
         Button butt;
         RelativeLayout idk;
@@ -75,24 +91,57 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            idk = (RelativeLayout)rootView.findViewById(R.id.root);
-            greenishSquare = (ImageView)rootView.findViewById(R.id.greenishSquare);
+            idk = (RelativeLayout) rootView.findViewById(R.id.root);
+            greenishSquare = (ImageView) rootView.findViewById(R.id.greenishSquare);
             //if (butt!=null)
-            idk.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    greenishSquare.setX(event.getX());
-                    greenishSquare.setY(event.getY());
-                    Log.d("you touch", "me");
-                    return true;
-                }
-            });
+//            idk.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    greenishSquare.setX(event.getX());
+//                    greenishSquare.setY(event.getY());
+//                    Log.d("you touch", "me at: " + event.getX() + " " + event.getY());
+//                    return true;
+//                }
+//            });
 
-            for(int i = 0; i < 9; i++){
-                positions[i] = new PointF();
+
+            squares[0] = greenishSquare;
+            squares[1] = (ImageView) rootView.findViewById(R.id.purpleishSquare);
+
+            for(int i = 0; i < numSquares; i++){
+
+                positions[i] = new PointF(i * squareWidth, (height - squareWidth)/2);
+
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) squares[i].getLayoutParams();
+                params.height = (int)squareWidth;
+                params.width = (int)squareWidth;
+                squares[i].setX(positions[i].x);
+                squares[i].setLayoutParams(params);
+                squares[i].setY(positions[i].y);
+
+                //change later
+                squares[i].setId(i);
+                squares[i].setOnTouchListener(this);
             }
-            
+
             return rootView;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+
+            Log.d("you touch", "me at: " + event.getX() + " " + event.getY());
+
+            switch(event.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    v.bringToFront();
+                default:
+                    squares[v.getId()].setX(event.getX() + v.getX() - squareWidth / 2);
+                    squares[v.getId()].setY(event.getY() + v.getY() - squareWidth / 2);
+            }
+
+            return true;
         }
     }
 }
