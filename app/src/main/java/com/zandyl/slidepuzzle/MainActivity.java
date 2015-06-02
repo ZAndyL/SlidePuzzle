@@ -98,25 +98,26 @@ public class MainActivity extends ActionBarActivity {
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-
-                    Log.d("you touch down", " at: " + event.getX() + " " + event.getY());
                     v.bringToFront();
                     gameModel.setCurrentlySelectedPiece(v.getId());
+                    break;
                 case MotionEvent.ACTION_UP:
 
                     Log.d("you touch up", " at: " + event.getX() + " " + event.getY());
-                    int posNum = gameModel.getPositionNumForXY(new PointF(event.getX() + v.getX(), event.getY() + v.getY()));
-                    if (posNum != -1) {
 
+                    v.setX(gameModel.getCurrentlySelectedPosition().x);
+                    v.setY(gameModel.getCurrentlySelectedPosition().y);
+
+                    break;
+                default:
+                    int posNum = gameModel.getPositionNumForXY(new PointF(event.getX() + v.getX(), event.getY() + v.getY()));
+                    if (posNum != -1 && posNum != v.getId()) {
                         gameModel.swapPieces(gameModel.currentlySelectedI, gameModel.currentlySelectedJ, posNum / gameModel.rows, posNum % gameModel.rows);
 
-                    } else {
-                        v.setX(gameModel.getCurrentlySelectedPosition().x);
-                        v.setY(gameModel.getCurrentlySelectedPosition().y);
                     }
-                default:
-                    gameModel.pieces[v.getId()/gameModel.rows][v.getId()%gameModel.rows].setX(event.getX() + v.getX() - squareWidth / 2);
-                    gameModel.pieces[v.getId()/gameModel.rows][v.getId()%gameModel.rows].setY(event.getY() + v.getY() - squareWidth / 2);
+                    gameModel.setCurrentlySelectedPiece(v.getId());
+                    gameModel.pieces[v.getId() / gameModel.rows][v.getId() % gameModel.rows].setX(event.getX() + v.getX() - squareWidth / 2);
+                    gameModel.pieces[v.getId() / gameModel.rows][v.getId() % gameModel.rows].setY(event.getY() + v.getY() - squareWidth / 2);
             }
 
             return true;
@@ -129,8 +130,8 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public void addToLayout(ImageView[][] pieces) {
-            for(int i = 0; i < pieces.length; i++){
-                for(int j = 0; j < pieces[0].length; j++){
+            for (int i = 0; i < pieces.length; i++) {
+                for (int j = 0; j < pieces[0].length; j++) {
                     layout.addView(pieces[i][j]);
                 }
             }
