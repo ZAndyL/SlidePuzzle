@@ -1,25 +1,18 @@
 package com.zandyl.slidepuzzle;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -53,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
-        squareWidth = (float)width / (numSquares);
+        squareWidth = (float) width / (numSquares);
     }
 
 
@@ -82,14 +75,10 @@ public class MainActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment implements View.OnTouchListener {
+    public static class PlaceholderFragment extends Fragment implements View.OnTouchListener, GameView {
 
-        Button butt;
-        RelativeLayout idk;
-        ImageView greenishSquare;
-        PointF[] positions = new PointF[numSquares];
-
-        PointF oldSquarePosition;
+        GameModel gameModel;
+        RelativeLayout layout;
 
         public PlaceholderFragment() {
         }
@@ -98,107 +87,53 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            layout = (RelativeLayout) rootView.findViewById(R.id.root);
 
-            createImageArrays();
-
-            idk = (RelativeLayout) rootView.findViewById(R.id.root);
-            greenishSquare = (ImageView) rootView.findViewById(R.id.greenishSquare);
-
-            squares[0] = greenishSquare;
-            squares[1] = (ImageView) rootView.findViewById(R.id.purpleishSquare);
-
-            squares[0].setImageBitmap(bitmapsArray[0]);
-            squares[1].setImageBitmap(bitmapsArray[1]);
-
-
-            for(int i = 0; i < numSquares; i++){
-
-                positions[i] = new PointF(i * squareWidth, (height - squareWidth)/2);
-
-//                ImageView square = new ImageView( getActivity() );
-//                squares[i] = square;
-
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) squares[i].getLayoutParams();
-                params.height = (int)squareWidth;
-                params.width = (int)squareWidth;
-                squares[i].setLayoutParams(params);
-                squares[i].setX(positions[i].x);
-                squares[i].setY(positions[i].y);
-
-                //change later
-                squares[i].setId(i);
-                squares[i].setOnTouchListener(this);
-            }
-
+            gameModel = new GameModel(getActivity(), this, this, width, height, 3, 3, R.drawable.selfie);
             return rootView;
-        }
-
-        private int getPositionNumForXY(PointF position){
-            for(int i = 0; i < numSquares; i++){
-                Rect tempRec = new Rect((int)positions[i].x, (int)positions[i].y, (int)(positions[i].x + squareWidth), (int)(positions[i].y + squareWidth));
-                Log.d("rect is", "" + tempRec + " position is: " + position.x + " " + position.y);
-
-                if(tempRec.contains((int)position.x, (int)position.y)){
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        private void swapSquares(int s1, int s2){
-            ImageView tmp = squares[s1];
-
-            squares[s1] = squares[s2];
-
-            squares[s2] = tmp;
-
-            squares[s1].setId(s1);
-            squares[s2].setId(s2);
-
-
-        }
-
-        void createImageArrays()
-        {
-            Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.selfie);
-            Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, width*2, width, true);
-
-            bitmapsArray[0] = Bitmap.createBitmap(bMapScaled, 0, 0, width, width);
-            bitmapsArray[1] = Bitmap.createBitmap(bMapScaled, width, 0, width, width);
-
         }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-            switch(event.getAction()){
+            switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
 
                     Log.d("you touch down", " at: " + event.getX() + " " + event.getY());
                     v.bringToFront();
-                    oldSquarePosition = positions[v.getId()];
+                    gameModel.setCurrentlySelectedPiece(v.getId());
                 case MotionEvent.ACTION_UP:
 
                     Log.d("you touch up", " at: " + event.getX() + " " + event.getY());
-                    int posNum = getPositionNumForXY(new PointF(event.getX() + v.getX(), event.getY() + v.getY()));
-                    if( posNum != -1){
-                        squares[posNum].setX(oldSquarePosition.x);
-                        squares[posNum].setY(oldSquarePosition.y);
-                        swapSquares(v.getId(), posNum);
-                        v.setX(positions[posNum].x);
-                        v.setY(positions[posNum].y);
-                    }
-                    else{
-                        v.setX(oldSquarePosition.x);
-                        v.setY(oldSquarePosition.y);
+                    int posNum = gameModel.getPositionNumForXY(new PointF(event.getX() + v.getX(), event.getY() + v.getY()));
+                    if (posNum != -1) {
+
+                        gameModel.swapPieces(gameModel.currentlySelectedI, gameModel.currentlySelectedJ, posNum / gameModel.rows, posNum % gameModel.rows);
+
+                    } else {
+                        v.setX(gameModel.getCurrentlySelectedPosition().x);
+                        v.setY(gameModel.getCurrentlySelectedPosition().y);
                     }
                 default:
-                    squares[v.getId()].setX(event.getX() + v.getX() - squareWidth / 2);
-                    squares[v.getId()].setY(event.getY() + v.getY() - squareWidth / 2);
+                    gameModel.pieces[v.getId()/gameModel.rows][v.getId()%gameModel.rows].setX(event.getX() + v.getX() - squareWidth / 2);
+                    gameModel.pieces[v.getId()/gameModel.rows][v.getId()%gameModel.rows].setY(event.getY() + v.getY() - squareWidth / 2);
             }
 
             return true;
+        }
+
+        @Override
+        public void updatePieces() {
+
+        }
+
+        @Override
+        public void addToLayout(ImageView[][] pieces) {
+            for(int i = 0; i < pieces.length; i++){
+                for(int j = 0; j < pieces[0].length; j++){
+                    layout.addView(pieces[i][j]);
+                }
+            }
         }
     }
 }
