@@ -22,15 +22,6 @@ public class MainActivity extends ActionBarActivity {
     static int height;
     static int width;
 
-    static final int numSquares = 2;
-
-    static ImageView[] squares = new ImageView[numSquares];
-
-    static Bitmap[] bitmapsArray = new Bitmap[numSquares];
-
-    static float squareWidth;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,15 +31,11 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-
-
         displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
-        squareWidth = (float) width / (numSquares);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,9 +46,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -72,9 +56,6 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends Fragment implements View.OnTouchListener, GameView {
 
         GameModel gameModel;
@@ -89,7 +70,7 @@ public class MainActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             layout = (RelativeLayout) rootView.findViewById(R.id.root);
 
-            gameModel = new GameModel(getActivity(), this, this, width, height, 3, 3, R.drawable.selfie);
+            gameModel = new GameModel(getActivity(), this, this, width, height, 3, 4, R.drawable.selfie);
             return rootView;
         }
 
@@ -111,28 +92,24 @@ public class MainActivity extends ActionBarActivity {
                     break;
                 default:
                     int posNum = gameModel.getPositionNumForXY(new PointF(event.getX() + v.getX(), event.getY() + v.getY()));
-                    if (posNum != -1 && posNum != v.getId()) {
-                        gameModel.swapPieces(gameModel.currentlySelectedI, gameModel.currentlySelectedJ, posNum / gameModel.rows, posNum % gameModel.rows);
 
+                    Log.d("You moved piece: ", v.getId() + " to " + posNum);
+                    if (posNum != -1 && posNum != v.getId()) {
+                        gameModel.swapPieces(gameModel.currentlySelectedI, gameModel.currentlySelectedJ, posNum / gameModel.cols, posNum % gameModel.cols);
                     }
                     gameModel.setCurrentlySelectedPiece(v.getId());
-                    gameModel.pieces[v.getId() / gameModel.rows][v.getId() % gameModel.rows].setX(event.getX() + v.getX() - squareWidth / 2);
-                    gameModel.pieces[v.getId() / gameModel.rows][v.getId() % gameModel.rows].setY(event.getY() + v.getY() - squareWidth / 2);
+                    gameModel.pieces[v.getId() / gameModel.cols][v.getId() % gameModel.cols].setX(event.getX() + v.getX() - gameModel.pieceWidth / 2);
+                    gameModel.pieces[v.getId() / gameModel.cols][v.getId() % gameModel.cols].setY(event.getY() + v.getY() - gameModel.pieceHeight / 2);
             }
 
             return true;
         }
 
         @Override
-        public void updatePieces() {
-
-        }
-
-        @Override
         public void addToLayout(ImageView[][] pieces) {
-            for (int i = 0; i < pieces.length; i++) {
-                for (int j = 0; j < pieces[0].length; j++) {
-                    layout.addView(pieces[i][j]);
+            for(ImageView[] rows: pieces){
+                for(ImageView img: rows){
+                    layout.addView(img);
                 }
             }
         }

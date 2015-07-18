@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 /**
- * Created by greencap on 5/10/2015.
+ * Created by Zheng (Andy) Liang on 5/10/2015.
  */
 public class GameModel {
 
@@ -62,7 +62,7 @@ public class GameModel {
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                positions[i][j] = new PointF((float) (i * pieceWidth), (float) (j * pieceHeight));
+                positions[i][j] = new PointF((j * pieceWidth),(i * pieceHeight));
 
                 ImageView piece = new ImageView(mContext);
                 pieces[i][j] = piece;
@@ -73,17 +73,13 @@ public class GameModel {
                 pieces[i][j].setX(positions[i][j].x);
                 pieces[i][j].setY(positions[i][j].y);
 
-                pieces[i][j].setId(i * rows + j);
+                pieces[i][j].setId(i * cols + j);
                 pieces[i][j].setOnTouchListener(pieceTouchListener);
                 pieces[i][j].setImageBitmap(bitmapsArray[i][j]);
             }
         }
         ui.addToLayout(pieces);
-        ui.updatePieces();
-
     }
-
-
 
     public void setPiecePosition(int i, int j, PointF pos) {
         pieces[i][j].setX(pos.x);
@@ -101,21 +97,26 @@ public class GameModel {
         ImageView tmp = pieces[i1][j1];
         pieces[i1][j1] = pieces[i2][j2];
         pieces[i2][j2] = tmp;
-        pieces[i1][j1].setId(i1 * rows + j1);
-        pieces[i2][j2].setId(i2 * rows + j2);
 
-        pieces[i1][j1].setId(i1 * rows + j1);
-        pieces[i2][j2].setId(i2 * rows + j2);
+        pieces[i1][j1].setId(i1 * cols + j1);
+        Log.d("set first piece id to ", "" + (i1 * cols + j1));
+        pieces[i2][j2].setId(i2 * cols + j2);
+        Log.d("set second piece id to ", "" + (i2 * cols + j2));
 
         pieces[i1][j1].setX(positions[i1][j1].x);
         pieces[i1][j1].setY(positions[i1][j1].y);
+
+        Log.d("set position ", "of first piece to x:" + positions[i1][j1].x + " y:" + positions[i1][j1].y);
+
         pieces[i2][j2].setX(positions[i2][j2].x);
         pieces[i2][j2].setY(positions[i2][j2].y);
+
+        Log.d("set position ", "of second piece to x:" + positions[i2][j2].x + " y:" + positions[i2][j2].y);
     }
 
     public void setCurrentlySelectedPiece(int num) {
-        currentlySelectedI = num / rows;
-        currentlySelectedJ = num % rows;
+        currentlySelectedI = num / cols;
+        currentlySelectedJ = num % cols;
     }
 
     public PointF getCurrentlySelectedPosition() {
@@ -126,10 +127,8 @@ public class GameModel {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 Rect tempRec = new Rect((int) positions[i][j].x, (int) positions[i][j].y, (int) (positions[i][j].x + pieceWidth), (int) (positions[i][j].y + pieceHeight));
-                Log.d("rect is", "" + tempRec + " position is: " + position.x + " " + position.y);
-
                 if (tempRec.contains((int) position.x, (int) position.y)) {
-                    return i * rows + j;
+                    return i * cols + j;
                 }
             }
         }
@@ -143,7 +142,7 @@ public class GameModel {
         bitmapsArray = new Bitmap[rows][cols];
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                bitmapsArray[i][j] = Bitmap.createBitmap(bMapScaled, (int) (i * pieceWidth), (int) (j * pieceHeight), (int) pieceWidth, (int) pieceHeight);
+                bitmapsArray[i][j] = Bitmap.createBitmap(bMapScaled, (int) (j * pieceWidth), (int) (i * pieceHeight), (int) pieceWidth, (int) pieceHeight);
             }
         }
 
