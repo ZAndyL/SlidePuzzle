@@ -1,5 +1,6 @@
 package com.zandyl.slidepuzzle;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.support.v7.app.ActionBarActivity;
@@ -50,6 +51,8 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
