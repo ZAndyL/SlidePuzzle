@@ -1,7 +1,6 @@
 package com.zandyl.slidepuzzle;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -16,12 +15,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 public class MainActivity extends ActionBarActivity {
     DisplayMetrics displaymetrics;
     static int height;
     static int width;
+
+    void showToast(String text){
+        Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +44,18 @@ public class MainActivity extends ActionBarActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
+
+        Ion.with(MainActivity.this)
+                .load("http://reddit.com/r/aww/hot/.json?limit=1")
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        RedditResponse response = (new Gson()).fromJson(result, RedditResponse.class);
+                        String url = response.data.children[0].data.url;
+                        showToast(url);
+                    }
+                });
     }
 
     @Override
