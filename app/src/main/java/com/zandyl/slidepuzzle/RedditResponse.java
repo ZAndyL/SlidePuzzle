@@ -18,6 +18,19 @@ public class RedditResponse {
             static class RedditChildData{
 
                 public String url;
+                public RedditPreview preview;
+
+                static class RedditPreview{
+                    public RedditImage[] images;
+
+                    static class RedditImage{
+                        public RedditSourceImage source;
+
+                        static class RedditSourceImage{
+                            public String url;
+                        }
+                    }
+                }
             }
         }
     }

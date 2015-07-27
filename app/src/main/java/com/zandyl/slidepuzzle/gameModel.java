@@ -33,14 +33,14 @@ public class GameModel {
     public ImageView[][] pieces;
     public Bitmap[][] bitmapsArray;
 
-    int imageId;
+    Bitmap image;
 
     View.OnTouchListener pieceTouchListener;
 
     int currentlySelectedI;
     int currentlySelectedJ;
 
-    public GameModel(Context context, View.OnTouchListener pieceTouchListener, GameView ui, int screenWidth, int screenHeight, int rows, int cols, int imageId) {
+    public GameModel(Context context, View.OnTouchListener pieceTouchListener, GameView ui, int screenWidth, int screenHeight, int rows, int cols, Bitmap image) {
 
         mContext = context;
         this.ui = ui;
@@ -50,7 +50,7 @@ public class GameModel {
         this.rows = rows;
         this.cols = cols;
         this.pieceTouchListener = pieceTouchListener;
-        this.imageId = imageId;
+        this.image = image;
 
         pieceWidth = (float) (screenWidth) / cols;
         pieceHeight = (float) (screenHeight) / rows;
@@ -136,8 +136,7 @@ public class GameModel {
     }
 
     void createImageArrays() {
-        Bitmap bMap = BitmapFactory.decodeResource(mContext.getResources(), imageId);
-        Bitmap bMapScaled = Bitmap.createScaledBitmap(bMap, screenWidth, screenHeight, true);
+        Bitmap bMapScaled = Bitmap.createScaledBitmap(image, screenWidth, screenHeight, true);
 
         bitmapsArray = new Bitmap[rows][cols];
         for (int i = 0; i < rows; i++) {

@@ -1,6 +1,8 @@
 package com.zandyl.slidepuzzle;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -22,10 +24,14 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import java.io.File;
+import java.io.IOException;
+
 public class MainActivity extends ActionBarActivity {
     DisplayMetrics displaymetrics;
     static int height;
     static int width;
+    static Bitmap img;
 
     void showToast(String text){
         Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
@@ -40,22 +46,18 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+        if(getIntent().getBooleanExtra("didDownloadImage", false)) {
+            String filePath = getIntent().getStringExtra("filePath");
+            img = BitmapFactory.decodeFile(filePath);
+        } else {
+            img = BitmapFactory.decodeResource(MainActivity.this.getResources(), R.drawable.selfie);
+        }
         displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
 
-        Ion.with(MainActivity.this)
-                .load("http://reddit.com/r/aww/hot/.json?limit=1")
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        RedditResponse response = (new Gson()).fromJson(result, RedditResponse.class);
-                        String url = response.data.children[0].data.url;
-                        showToast(url);
-                    }
-                });
+
     }
 
     @Override
@@ -93,7 +95,7 @@ public class MainActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             layout = (RelativeLayout) rootView.findViewById(R.id.root);
 
-            gameModel = new GameModel(getActivity(), this, this, width, height, 3, 4, R.drawable.selfie);
+            gameModel = new GameModel(getActivity(), this, this, width, height, 3, 4, img);
             return rootView;
         }
 
