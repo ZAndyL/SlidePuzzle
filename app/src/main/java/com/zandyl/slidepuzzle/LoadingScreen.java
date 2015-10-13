@@ -1,6 +1,9 @@
 package com.zandyl.slidepuzzle;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -34,17 +37,23 @@ public class LoadingScreen extends RoboActivity {
 
     public boolean isOnline() {
 
-        Runtime runtime = Runtime.getRuntime();
-        try {
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
+        if (mWifi.isConnected()) {
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+                int     exitValue = ipProcess.waitFor();
+                return (exitValue == 0);
 
-        } catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
+            } catch (IOException e)          { e.printStackTrace(); }
+            catch (InterruptedException e) { e.printStackTrace(); }
 
-        return false;
+            return false;
+        } else {
+            return false;
+        }
     }
 
     void getRedditAwwPic(){

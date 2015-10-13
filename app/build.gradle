@@ -21,11 +21,11 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    provided 'org.roboguice:roboblender:3.+'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.koushikdutta.ion:ion:2.+'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.github.tibolte:elasticdownload:1.0.+'
     compile 'org.roboguice:roboguice:3.+'
-    provided 'org.roboguice:roboblender:3.+'
 }
