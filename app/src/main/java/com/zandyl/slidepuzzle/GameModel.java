@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.Random;
+
 /**
  * Created by Zheng (Andy) Liang on 5/10/2015.
  */
@@ -31,6 +33,7 @@ public class GameModel {
 
     public PointF[][] positions;
     public ImageView[][] pieces;
+    public ImageView[][] originalPieces;
     public Bitmap[][] bitmapsArray;
 
     Bitmap image;
@@ -57,6 +60,7 @@ public class GameModel {
 
         positions = new PointF[rows][cols];
         pieces = new ImageView[rows][cols];
+        originalPieces = new ImageView[rows][cols];
 
         createImageArrays();
 
@@ -66,6 +70,7 @@ public class GameModel {
 
                 ImageView piece = new ImageView(mContext);
                 pieces[i][j] = piece;
+                originalPieces[i][j] = piece;
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) pieceWidth, (int) pieceHeight);
 
@@ -114,6 +119,24 @@ public class GameModel {
         Log.d("set position ", "of second piece to x:" + positions[i2][j2].x + " y:" + positions[i2][j2].y);
     }
 
+    public void scramble(int n) {
+        Random random = new Random();
+        for(int i = 0; i < n; i++){
+            swapPieces(random.nextInt(pieces.length), random.nextInt(pieces[0].length), random.nextInt(pieces.length), random.nextInt(pieces[0].length));
+        }
+    }
+
+    public Boolean isSolved(){
+        for(int i = 0; i < pieces.length; i++){
+            for(int j = 0; j < pieces[i].length; j++){
+                if(pieces[i][j] != originalPieces[i][j]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public void setCurrentlySelectedPiece(int num) {
         currentlySelectedI = num / cols;
         currentlySelectedJ = num % cols;
@@ -146,5 +169,4 @@ public class GameModel {
         }
 
     }
-
 }

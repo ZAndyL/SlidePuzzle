@@ -1,19 +1,27 @@
 package com.zandyl.slidepuzzle;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,15 +35,11 @@ import com.koushikdutta.ion.Ion;
 import java.io.File;
 import java.io.IOException;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends FragmentActivity {
     DisplayMetrics displaymetrics;
     static int height;
     static int width;
     static Bitmap img;
-
-    void showToast(String text){
-        Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,26 +64,26 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            Intent intent = new Intent(this, SettingsActivity.class);
+//            startActivity(intent);
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     public static class PlaceholderFragment extends Fragment implements View.OnTouchListener, GameView {
 
@@ -95,7 +99,8 @@ public class MainActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             layout = (RelativeLayout) rootView.findViewById(R.id.root);
 
-            gameModel = new GameModel(getActivity(), this, this, width, height, 3, 4, img);
+            gameModel = new GameModel(getActivity(), this, this, width, height - ContextManager.getStatusBarHeight(getActivity()), 4, 3, img);
+            gameModel.scramble(15);
             return rootView;
         }
 
@@ -121,6 +126,9 @@ public class MainActivity extends ActionBarActivity {
                     Log.d("You moved piece: ", v.getId() + " to " + posNum);
                     if (posNum != -1 && posNum != v.getId()) {
                         gameModel.swapPieces(gameModel.currentlySelectedI, gameModel.currentlySelectedJ, posNum / gameModel.cols, posNum % gameModel.cols);
+                        if(gameModel.isSolved()){
+                            ContextManager.showToast("You solved it!", getActivity());
+                        }
                     }
                     gameModel.setCurrentlySelectedPiece(v.getId());
                     gameModel.pieces[v.getId() / gameModel.cols][v.getId() % gameModel.cols].setX(event.getX() + v.getX() - gameModel.pieceWidth / 2);
@@ -132,8 +140,8 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public void addToLayout(ImageView[][] pieces) {
-            for(ImageView[] rows: pieces){
-                for(ImageView img: rows){
+            for (ImageView[] rows : pieces) {
+                for (ImageView img : rows) {
                     layout.addView(img);
                 }
             }

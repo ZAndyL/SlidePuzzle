@@ -49,7 +49,7 @@ public class LoadingScreen extends RoboActivity {
 
     void getRedditAwwPic(){
         Ion.with(LoadingScreen.this)
-                .load("http://reddit.com/r/pics/hot/.json?limit=1")
+                .load("http://reddit.com/r/aww/hot/.json?limit=1")
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
