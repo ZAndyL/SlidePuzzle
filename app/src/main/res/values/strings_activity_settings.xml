@@ -1,6 +1,28 @@
 <resources>
     <string name="title_activity_settings">Settings</string>
 
+    <string name="pref_subreddit_key">com.zandyl.slidepuzzle.subreddit</string>
+    <string name="pref_title_subreddit">Subreddit</string>
+    <string name="pref_default_subreddit">aww</string>
+
+    <string name="pref_rows_key">com.zandyl.slidepuzzle.rows</string>
+    <string name="pref_rows">Number of Rows</string>
+    <string-array name="pref_rows_list_values">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string name="pref_cols_key">com.zandyl.slidepuzzle.cols</string>
+    <string name="pref_cols">Number of Columns</string>
+    <string-array name="pref_cols_list_values">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 

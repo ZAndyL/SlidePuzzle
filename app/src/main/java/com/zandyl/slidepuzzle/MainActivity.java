@@ -2,12 +2,14 @@ package com.zandyl.slidepuzzle;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
@@ -44,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
     static Bitmap img;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -63,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         height = displaymetrics.heightPixels;
         width = displaymetrics.widthPixels;
         final TypedArray styledAttributes = getApplication().getTheme().obtainStyledAttributes(
-                new int[] { android.R.attr.actionBarSize });
+                new int[]{android.R.attr.actionBarSize});
         actionBarHeight = (int) styledAttributes.getDimension(0, 0);
         styledAttributes.recycle();
     }
@@ -101,13 +108,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onResume() {
+            super.onResume();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            int rows = Integer.parseInt(prefs.getString(this.getString(R.string.pref_rows_key), "4"));
+            int cols = Integer.parseInt(prefs.getString(this.getString(R.string.pref_cols_key), "3"));
+
+            if(rows != gameModel.rows || cols != gameModel.cols){
+                gameModel = new GameModel(getActivity(), this, this, width, height - ContextManager.getStatusBarHeight(getActivity()) - actionBarHeight,rows, cols, img);
+                gameModel.scramble(rows*cols);
+            }
+
+        }
+
+        @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             layout = (RelativeLayout) rootView.findViewById(R.id.root);
 
-            gameModel = new GameModel(getActivity(), this, this, width, height - ContextManager.getStatusBarHeight(getActivity()) - actionBarHeight, 4, 3, img);
-            gameModel.scramble(15);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            int rows = Integer.parseInt(prefs.getString(this.getString(R.string.pref_rows_key), "4"));
+            int cols = Integer.parseInt(prefs.getString(this.getString(R.string.pref_cols_key), "3"));
+
+            gameModel = new GameModel(getActivity(), this, this, width, height - ContextManager.getStatusBarHeight(getActivity()) - actionBarHeight, rows, cols, img);
+            gameModel.scramble(rows*cols);
             return rootView;
         }
 

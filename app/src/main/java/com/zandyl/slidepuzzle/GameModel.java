@@ -28,8 +28,8 @@ public class GameModel {
     float pieceHeight;
     float pieceWidth;
 
-    int rows;
-    int cols;
+    public int rows;
+    public int cols;
 
     public PointF[][] positions;
     public ImageView[][] pieces;
