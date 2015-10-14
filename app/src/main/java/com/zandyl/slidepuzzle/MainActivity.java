@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     static int width;
     static int actionBarHeight;
     static Bitmap img;
+    static String subreddit;
 
     @Override
     protected void onResume() {
@@ -113,10 +114,15 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             int rows = Integer.parseInt(prefs.getString(this.getString(R.string.pref_rows_key), "4"));
             int cols = Integer.parseInt(prefs.getString(this.getString(R.string.pref_cols_key), "3"));
+            String selectedSubreddit = prefs.getString(this.getString(R.string.pref_subreddit_key), "aww");
 
             if(rows != gameModel.rows || cols != gameModel.cols){
                 gameModel = new GameModel(getActivity(), this, this, width, height - ContextManager.getStatusBarHeight(getActivity()) - actionBarHeight,rows, cols, img);
                 gameModel.scramble(rows*cols);
+            } else if (selectedSubreddit != subreddit){
+                Intent intent = new Intent(getActivity(), LoadingScreen.class);
+                startActivity(intent);
+                getActivity().finish();
             }
 
         }
@@ -130,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             int rows = Integer.parseInt(prefs.getString(this.getString(R.string.pref_rows_key), "4"));
             int cols = Integer.parseInt(prefs.getString(this.getString(R.string.pref_cols_key), "3"));
+            subreddit = prefs.getString(this.getString(R.string.pref_subreddit_key), "aww");
 
             gameModel = new GameModel(getActivity(), this, this, width, height - ContextManager.getStatusBarHeight(getActivity()) - actionBarHeight, rows, cols, img);
             gameModel.scramble(rows*cols);

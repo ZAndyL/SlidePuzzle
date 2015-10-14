@@ -2,8 +2,10 @@ package com.zandyl.slidepuzzle;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -57,14 +59,16 @@ public class LoadingScreen extends RoboActivity {
     }
 
     void getRedditAwwPic(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String subreddit = prefs.getString(this.getString(R.string.pref_subreddit_key), "aww");
         Ion.with(LoadingScreen.this)
-                .load("http://reddit.com/r/aww/hot/.json?limit=1")
+                .load("http://reddit.com/r/" + subreddit + "/hot/.json?limit=10")
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         RedditResponse response = (new Gson()).fromJson(result, RedditResponse.class);
-                        String url = response.data.children[0].data.preview.images[0].source.url;
+                        String url = response.data.children[3].data.preview.images[0].source.url;
                         downloadPicFromUrl(url);
                     }
                 });

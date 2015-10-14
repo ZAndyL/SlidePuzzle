@@ -1,6 +1,10 @@
 <resources>
     <string name="title_activity_settings">Settings</string>
+<!--Headers-->
+    <string name="pref_header_puzzle_settings">Puzzle settings</string>
+    <string name="pref_header_reddit_settings">Reddit Settings</string>
 
+    <!--keys and values-->
     <string name="pref_subreddit_key">com.zandyl.slidepuzzle.subreddit</string>
     <string name="pref_title_subreddit">Subreddit</string>
     <string name="pref_default_subreddit">aww</string>
