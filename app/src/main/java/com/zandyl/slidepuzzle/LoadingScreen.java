@@ -67,9 +67,15 @@ public class LoadingScreen extends RoboActivity {
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
-                        RedditResponse response = (new Gson()).fromJson(result, RedditResponse.class);
-                        String url = response.data.children[3].data.preview.images[0].source.url;
-                        downloadPicFromUrl(url);
+                        try{
+                            RedditResponse response = (new Gson()).fromJson(result, RedditResponse.class);
+                            String url = response.data.children[3].data.preview.images[0].source.url;
+                            downloadPicFromUrl(url);
+                        } catch (Exception exception){}
+                        finally {
+                            moveOn();
+                        }
+
                     }
                 });
     }
