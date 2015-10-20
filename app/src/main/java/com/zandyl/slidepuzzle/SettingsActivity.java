@@ -4,6 +4,7 @@ package com.zandyl.slidepuzzle;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -16,6 +17,7 @@ import android.preference.PreferenceActivity;
 import android.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -34,10 +36,23 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends PreferenceActivity {
+
+    public static ListPreference sortingTime;
+    public static PreferenceScreen mPreferenceScreen;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
+
+        sortingTime = new ListPreference(this);
+        CharSequence[] entries = {"hour", "day", "week", "month", "year", "all"};
+        sortingTime.setKey(getString(R.string.pref_sorting_time_key));
+        sortingTime.setTitle(getString(R.string.pref_title_sorting_time));
+        sortingTime.setEntries(entries);
+        sortingTime.setEntryValues(entries);
+        sortingTime.setDefaultValue("day");
+
     }
 
     /**
@@ -88,6 +103,14 @@ public class SettingsActivity extends PreferenceActivity {
             String stringValue = value.toString();
 
             if (preference instanceof ListPreference) {
+                // Ghetto implementation of dynamic preferences, refactor later
+                if(stringValue.equals("top") || stringValue.equals("controversial")){
+                    mPreferenceScreen.addPreference(sortingTime);
+                    bindPreferenceSummaryToValue(sortingTime);
+                } else if(stringValue.equals("hot") || stringValue.equals("new")){
+                    mPreferenceScreen.removePreference(sortingTime);
+                }
+
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
                 ListPreference listPreference = (ListPreference) preference;
@@ -235,12 +258,20 @@ public class SettingsActivity extends PreferenceActivity {
             addPreferencesFromResource(R.xml.pref_data_sync);
             setHasOptionsMenu(true);
 
+            mPreferenceScreen = getPreferenceScreen();
+
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_sorting_key)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_subreddit_key)));
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+
         }
 
         @Override

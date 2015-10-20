@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     static Bitmap img;
     static String subreddit;
     static String sorting;
+    static String sortingTime;
 
     @Override
     protected void onResume() {
@@ -117,11 +118,12 @@ public class MainActivity extends AppCompatActivity {
             int cols = Integer.parseInt(prefs.getString(this.getString(R.string.pref_cols_key), "3"));
             String selectedSubreddit = prefs.getString(this.getString(R.string.pref_subreddit_key), "aww");
             String selectedSorting = prefs.getString(getString(R.string.pref_sorting_key), "hot");
+            String selectedSortingTime = prefs.getString(this.getString(R.string.pref_sorting_time_key), "day");
 
             if(rows != gameModel.rows || cols != gameModel.cols){
                 gameModel = new GameModel(getActivity(), this, this, width, height - ContextManager.getStatusBarHeight(getActivity()) - actionBarHeight,rows, cols, img);
                 gameModel.scramble(rows*cols);
-            } else if (selectedSubreddit != subreddit || selectedSorting != sorting){
+            } else if (!selectedSubreddit.equals(subreddit) || !selectedSorting.equals(sorting) || !selectedSortingTime.equals(sortingTime)){
                 Intent intent = new Intent(getActivity(), LoadingScreen.class);
                 startActivity(intent);
                 getActivity().finish();
@@ -140,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             int cols = Integer.parseInt(prefs.getString(this.getString(R.string.pref_cols_key), "3"));
             subreddit = prefs.getString(this.getString(R.string.pref_subreddit_key), "aww");
             sorting = prefs.getString(this.getString(R.string.pref_sorting_key), "hot");
+            sortingTime = prefs.getString(this.getString(R.string.pref_sorting_time_key), "day");
 
             gameModel = new GameModel(getActivity(), this, this, width, height - ContextManager.getStatusBarHeight(getActivity()) - actionBarHeight, rows, cols, img);
             gameModel.scramble(rows*cols);

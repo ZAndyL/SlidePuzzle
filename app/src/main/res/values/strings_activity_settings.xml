@@ -5,6 +5,10 @@
     <string name="pref_header_reddit_settings">Reddit Settings</string>
 
     <!--keys and values-->
+    <string name="pref_sorting_time_key">com.zandyl.slidepuzzle.sortingTime</string>
+    <string name="pref_title_sorting_time">Sorting Time</string>
+    <string name="pref_default_sorting_time">day</string>
+
     <string name="pref_subreddit_key">com.zandyl.slidepuzzle.subreddit</string>
     <string name="pref_title_subreddit">Subreddit</string>
     <string name="pref_default_subreddit">aww</string>
