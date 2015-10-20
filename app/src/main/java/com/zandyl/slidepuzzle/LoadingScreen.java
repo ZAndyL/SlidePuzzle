@@ -61,8 +61,9 @@ public class LoadingScreen extends RoboActivity {
     void getRedditAwwPic(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String subreddit = prefs.getString(this.getString(R.string.pref_subreddit_key), "aww");
+        String sorting = prefs.getString(getString(R.string.pref_sorting_key), "hot");
         Ion.with(LoadingScreen.this)
-                .load("http://reddit.com/r/" + subreddit + "/hot/.json?limit=10")
+                .load("http://reddit.com/r/" + subreddit + "/" + sorting + "/.json?limit=10")
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
@@ -72,10 +73,6 @@ public class LoadingScreen extends RoboActivity {
                             String url = response.data.children[3].data.preview.images[0].source.url;
                             downloadPicFromUrl(url);
                         } catch (Exception exception){}
-                        finally {
-                            moveOn();
-                        }
-
                     }
                 });
     }

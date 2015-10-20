@@ -9,6 +9,16 @@
     <string name="pref_title_subreddit">Subreddit</string>
     <string name="pref_default_subreddit">aww</string>
 
+    <string name="pref_sorting_key">com.zandyl.slidepuzzle.sorting</string>
+    <string name="pref_title_sorting">Sorting</string>
+    <string name="pref_default_sorting">hot</string>
+    <string-array name="pref_sorting_list_values">
+        <item>hot</item>
+        <item>new</item>
+        <item>top</item>
+        <item>controversial</item>
+    </string-array>
+
     <string name="pref_rows_key">com.zandyl.slidepuzzle.rows</string>
     <string name="pref_rows">Number of Rows</string>
     <string-array name="pref_rows_list_values">

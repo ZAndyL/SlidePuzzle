@@ -27,4 +27,13 @@
     android:singleLine="true"
     android:maxLines="1" />
 
+    <ListPreference
+        android:key="@string/pref_sorting_key"
+        android:title="@string/pref_title_sorting"
+        android:defaultValue="hot"
+        android:entries="@array/pref_sorting_list_values"
+        android:entryValues="@array/pref_sorting_list_values"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+
 </PreferenceScreen>
