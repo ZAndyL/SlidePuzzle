@@ -1,4 +1,4 @@
-package com.zandyl.slidepuzzle;
+package com.andyliang.pawwzle;
 
 import android.content.Context;
 import android.content.res.Configuration;

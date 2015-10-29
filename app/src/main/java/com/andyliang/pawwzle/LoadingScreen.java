@@ -1,4 +1,4 @@
-package com.zandyl.slidepuzzle;
+package com.andyliang.pawwzle;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,7 +72,7 @@ public class LoadingScreen extends RoboActivity {
                             RedditResponse response = (new Gson()).fromJson(result, RedditResponse.class);
                             String url = response.data.children[3].data.preview.images[0].source.url;
                             downloadPicFromUrl(url);
-                        } catch (Exception exception){}
+                        } catch (Exception exception){ moveOn(); }
                     }
                 });
     }

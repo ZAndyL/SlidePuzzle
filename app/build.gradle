@@ -1,11 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'alias'
+            keyPassword 'pass'
+            storeFile file('path')
+            storePassword 'pass'
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.zandyl.slidepuzzle"
+        applicationId "com.zandyl.pawwzle"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
@@ -15,6 +23,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }

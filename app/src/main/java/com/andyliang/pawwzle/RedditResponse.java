@@ -1,4 +1,4 @@
-package com.zandyl.slidepuzzle;
+package com.andyliang.pawwzle;
 
 /**
  * Created by Zheng (Andy) Liang on 7/23/2015.

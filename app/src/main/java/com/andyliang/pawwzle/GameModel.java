@@ -1,14 +1,11 @@
-package com.zandyl.slidepuzzle;
+package com.andyliang.pawwzle;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -104,19 +101,13 @@ public class GameModel {
         pieces[i2][j2] = tmp;
 
         pieces[i1][j1].setId(i1 * cols + j1);
-        Log.d("set first piece id to ", "" + (i1 * cols + j1));
         pieces[i2][j2].setId(i2 * cols + j2);
-        Log.d("set second piece id to ", "" + (i2 * cols + j2));
 
         pieces[i1][j1].setX(positions[i1][j1].x);
         pieces[i1][j1].setY(positions[i1][j1].y);
 
-        Log.d("set position ", "of first piece to x:" + positions[i1][j1].x + " y:" + positions[i1][j1].y);
-
         pieces[i2][j2].setX(positions[i2][j2].x);
         pieces[i2][j2].setY(positions[i2][j2].y);
-
-        Log.d("set position ", "of second piece to x:" + positions[i2][j2].x + " y:" + positions[i2][j2].y);
     }
 
     public void scramble(int n) {

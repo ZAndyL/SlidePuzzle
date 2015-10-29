@@ -1,4 +1,4 @@
-package com.zandyl.slidepuzzle;
+package com.andyliang.pawwzle;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -1,42 +1,25 @@
-package com.zandyl.slidepuzzle;
+package com.andyliang.pawwzle;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
-
-import java.io.File;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     DisplayMetrics displaymetrics;
@@ -158,17 +141,11 @@ public class MainActivity extends AppCompatActivity {
                     gameModel.setCurrentlySelectedPiece(v.getId());
                     break;
                 case MotionEvent.ACTION_UP:
-
-                    Log.d("you touch up", " at: " + event.getX() + " " + event.getY());
-
                     v.setX(gameModel.getCurrentlySelectedPosition().x);
                     v.setY(gameModel.getCurrentlySelectedPosition().y);
-
                     break;
                 default:
                     int posNum = gameModel.getPositionNumForXY(new PointF(event.getX() + v.getX(), event.getY() + v.getY()));
-
-                    Log.d("You moved piece: ", v.getId() + " to " + posNum);
                     if (posNum != -1 && posNum != v.getId()) {
                         gameModel.swapPieces(gameModel.currentlySelectedI, gameModel.currentlySelectedJ, posNum / gameModel.cols, posNum % gameModel.cols);
                         if(gameModel.isSolved()){
